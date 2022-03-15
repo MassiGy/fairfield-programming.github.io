@@ -21,7 +21,6 @@ signupForm.onsubmit = () => {
     fetch(request).then((data) => {
 
         if (data.status == 200) {
-
             Cookies.set('token', data.json.token);
             alert("Email has been sent to you, Please view it to validate your email address. ( The email will expire in 4 days )")
             window.location.href = "/dashboard";
@@ -37,7 +36,7 @@ signupForm.onsubmit = () => {
         }
 
     }).catch((error) => {
-
+        
         displayWarning("Internal Error- Try Reloading the Page.");
 
     });
