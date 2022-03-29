@@ -6,7 +6,8 @@ signupForm.onsubmit = () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    let request = new Request("https://fairfield-programming.herokuapp.com/user/signup", {
+    // let request = new Request("https://fairfield-programming.herokuapp.com/user/signup", {
+    let request = new Request("http://localhost:8080/user/signup", {
         method: "POST",
         body: JSON.stringify({
             email,
@@ -18,14 +19,20 @@ signupForm.onsubmit = () => {
         })
     });
 
-    fetch(request).then((data) => {
+    fetch(request).then(async (response) => {
 
-        if (data.status == 200) {
-            Cookies.set('token', data.json.token);
-            alert("Email has been sent to you, Please view it to validate your email address. ( The email will expire in 4 days )")
+        if (response.status == 200) {
+            // get the data
+            const data = await response.json();
+
+            // setup the cookie
+            const COOKIE_MAX_AGE = 14 * 24 * 60 * 60;
+            document.cookie = `token=${data.token} ; path=/ ; max-age=${COOKIE_MAX_AGE} ; httpOnly=true ; secure=true `;
+
+            alert("Email has been sent to you, Please view it to validate your email address. ( The email will expire in 4 days )");
             window.location.href = "/dashboard";
 
-        } else if (data.status == 403) {
+        } else if (response.status == 403) {
 
             displayWarning("Account Already Exists.");
 
@@ -36,7 +43,8 @@ signupForm.onsubmit = () => {
         }
 
     }).catch((error) => {
-        
+        console.log(error);
+
         displayWarning("Internal Error- Try Reloading the Page.");
 
     });

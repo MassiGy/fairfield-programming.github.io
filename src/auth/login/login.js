@@ -17,11 +17,17 @@ loginForm.onsubmit = () => {
         })
     });
 
-    fetch(request).then((data) => {
+    fetch(request).then((response) => {
 
-        if (data.status == 200) {
+        if (response.status == 200) {
 
-            Cookies.set('token', data.json.token);
+            // get the data
+            const data = await response.json();
+
+            // setup the cookie
+            const COOKIE_MAX_AGE = 14 * 24 * 60 * 60;
+            document.cookie = `token=${data.token} ; path=/ ; max-age=${COOKIE_MAX_AGE} ; httpOnly=true ; secure=true `;
+
             window.location.href = "/dashboard";
 
         } else {
