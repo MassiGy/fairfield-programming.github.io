@@ -1,3 +1,5 @@
+if (Cookies.get("token") != undefined) window.location.href = "/dashboard";
+
 const signupForm = document.getElementById("signup-form");
 
 signupForm.onsubmit = () => {
@@ -25,12 +27,13 @@ signupForm.onsubmit = () => {
             // get the data
             const data = await response.json();
 
-            // setup the cookie
-            const COOKIE_MAX_AGE = 14 * 24 * 60 * 60;
-            document.cookie = `token=${data.token} ; path=/ ; max-age=${COOKIE_MAX_AGE} ; httpOnly=true ; secure=true `;
+            data.json().then((jsonData) => {
 
-            alert("Email has been sent to you, Please view it to validate your email address. ( The email will expire in 4 days )");
-            window.location.href = "/dashboard";
+                Cookies.set('token', jsonData.token);
+                alert("Email has been sent to you, Please view it to validate your email address. ( The email will expire in 4 days )")
+                window.location.href = "/dashboard";
+
+            })
 
         } else if (response.status == 403) {
 

@@ -1,6 +1,7 @@
+if (Cookies.get("token") != undefined) window.location.href = "/dashboard";
 const signupForm = document.getElementById("signup-form");
 signupForm.onsubmit = ()=>{
-    const username = document.getElementById("password").username;
+    const username = document.getElementById("username").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     let request = new Request("https://fairfield-programming.herokuapp.com/user/signup", {
@@ -15,10 +16,12 @@ signupForm.onsubmit = ()=>{
         })
     });
     fetch(request).then((data)=>{
-        if (data.status == 200) {
-            Cookies.set('token', data.json.token);
+        if (data.status == 200) data.json().then((jsonData)=>{
+            Cookies.set('token', jsonData.token);
+            alert("Email has been sent to you, Please view it to validate your email address. ( The email will expire in 4 days )");
             window.location.href = "/dashboard";
-        } else if (data.status == 409) displayWarning("Account Already Exists.");
+        });
+        else if (data.status == 403) displayWarning("Account Already Exists.");
         else displayWarning("Invalid Username, Email or Password.");
     }).catch((error)=>{
         displayWarning("Internal Error- Try Reloading the Page.");

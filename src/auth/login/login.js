@@ -1,3 +1,5 @@
+if (Cookies.get("token") != undefined) window.location.href = "/dashboard";
+
 const loginForm = document.getElementById("login-form");
 
 loginForm.onsubmit = () => {
@@ -10,7 +12,6 @@ loginForm.onsubmit = () => {
         body: JSON.stringify({
             email,
             password,
-            username: ""
         }),
         headers: new Headers({
             "Content-Type": "application/json"
@@ -19,6 +20,7 @@ loginForm.onsubmit = () => {
 
     fetch(request).then((response) => {
 
+<<<<<<< HEAD
         if (response.status == 200) {
 
             // get the data
@@ -29,6 +31,20 @@ loginForm.onsubmit = () => {
             document.cookie = `token=${data.token} ; path=/ ; max-age=${COOKIE_MAX_AGE} ; httpOnly=true ; secure=true `;
 
             window.location.href = "/dashboard";
+=======
+        if (data.status == 200) {
+        
+            data.json().then((jsonData) => {
+
+                Cookies.set('token', jsonData.token);
+                window.location.href = "/dashboard";
+
+            });
+
+        } else if (data.status == 404) {
+
+            displayWarning("Account Not Found.");
+>>>>>>> ee554f53d780ea37c80cb3503259cf5bd720f4ef
 
         } else {
 
