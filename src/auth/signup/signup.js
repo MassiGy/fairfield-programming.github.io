@@ -22,18 +22,15 @@ signupForm.onsubmit = () => {
     });
 
     fetch(request).then(async (response) => {
-
         if (response.status == 200) {
             // get the data
             const data = await response.json();
 
-            data.json().then((jsonData) => {
 
-                Cookies.set('token', jsonData.token);
-                alert("Email has been sent to you, Please view it to validate your email address. ( The email will expire in 4 days )")
-                window.location.href = "/dashboard";
+            Cookies.set('token', data.token);
+            alert("Email has been sent to you, Please view it to validate your email address. ( The email will expire in 4 days )")
+            window.location.href = "/dashboard";
 
-            })
 
         } else if (response.status == 403) {
 
